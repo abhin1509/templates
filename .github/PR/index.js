@@ -7,6 +7,7 @@ const branch = "main";
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
+const admins = ["abhin1509", "akhilvc10", "ceejeey"];
 
 
 async function commentOnPR(prNo, msg) {
@@ -96,6 +97,7 @@ const isNewTemplate = (modifiedFolder, existingFolder) => {
 
 async function validatePR() {
   let prNo = process.env.PR_NUMBER;
+  console.log(process.env);
   console.log("pull no:: ", prNo);
 
   // list pull request files
