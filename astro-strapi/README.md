@@ -3,12 +3,6 @@
 A Quick astro base and strapi backend starter project template.
 
 
-## Tags
-
-![](https://img.shields.io/badge/-astro-informational)
-![](https://img.shields.io/badge/-strapi-informational)
-
-
 ## Dependencies
 
 `astro`<br/>
