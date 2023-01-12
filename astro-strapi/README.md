@@ -14,6 +14,7 @@ A Quick astro base and strapi backend starter project template.
 
 ## FAQ
 
+
 #### Question 1
 
 Answer 1
