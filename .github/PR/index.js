@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
 
-const owner = "stackw3";
+const owner = "abhin1509";
 const repo = "templates";
 const branch = "main";
 const octokit = new Octokit({
@@ -107,7 +107,7 @@ async function deletingTemplate(prFiles, modifiedFolder) {
     let shaTemplate;
     const selectedTemplateRes = await octokit.request(
       "GET /repos/{owner}/{repo}/git/trees/main", {
-        owner: owner,
+        owner: "stackw3",
         repo: repo,
       }
     );
@@ -122,7 +122,7 @@ async function deletingTemplate(prFiles, modifiedFolder) {
     let { data } = await octokit.request(
       "GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
       {
-        owner: owner,
+        owner: "stackw3",
         repo: repo,
         tree_sha: shaTemplate,
         recursive: 1,
