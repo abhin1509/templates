@@ -155,8 +155,8 @@ async function updateFile() {
       let maintainBy = "stackw3";
       if (name[0] === "@") {
         let userName = name.substring(
-          str.indexOf("@") + 1,
-          str.lastIndexOf("@")
+          name.indexOf("@") + 1,
+          name.lastIndexOf("@")
         );
         maintainBy = userName;
       }
