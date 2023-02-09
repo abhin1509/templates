@@ -229,6 +229,13 @@ async function validatePR() {
     // check if readme is present or not for every new folder
     modifiedFolder.forEach(async function (folder) {
       let targetFile = `${folder}/README.md`;
+
+      // if independent template
+      if(folder[0] === "@") {
+        folder = res2.data[i].filename;
+        targetFile = res2.data[i].filename;
+      }
+
       // check if this file is present or not
       let isFilePresent = false;
       for (let i = 0; i < res2.data.length; i++) {
