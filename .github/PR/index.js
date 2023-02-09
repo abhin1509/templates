@@ -96,17 +96,18 @@ const isNewTemplate = (modifiedFolder, existingFolder) => {
 
 async function deletingTemplate(prFiles, modifiedFolder) {
   // return true if deleting a template else return false
-  if(modifiedFolder.size === 0) {
+  if (modifiedFolder.size === 0) {
     console.log("false");
     return false;
   }
   let tempModifiedFolder = new Set(modifiedFolder);
   tempModifiedFolder.forEach(async function (val) {
     // val is each template name in prFiles
-    // get it's hash 
+    // get it's hash
     let shaTemplate;
     const selectedTemplateRes = await octokit.request(
-      "GET /repos/{owner}/{repo}/git/trees/main", {
+      "GET /repos/{owner}/{repo}/git/trees/main",
+      {
         owner: owner,
         repo: repo,
       }
@@ -135,17 +136,19 @@ async function deletingTemplate(prFiles, modifiedFolder) {
       if (item.type === "blob") {
         let existingFile = item.path;
         // this existing file should be deleted in prFiles
-        
-        for(let pr of prFiles) {
+
+        for (let pr of prFiles) {
           let { filename, status, additions } = pr;
-          if(existingFile === filename && status === "removed" && additions === 0) {
+          if (
+            existingFile === filename &&
+            status === "removed" &&
+            additions === 0
+          ) {
             return false;
           }
         }
-
       }
     }
-
   });
   console.log("true");
   return true;
@@ -155,9 +158,9 @@ async function isAdmin() {
   let ADMINS = process.env.ADMINS;
   let ACTOR_NAME = process.env.GITHUB_ACTOR;
   console.log("actor_name:: ", ACTOR_NAME);
-  for(let index=0; index<ADMINS.split(",").length; index++) {
-    if(ADMINS.split(",")[index] === ACTOR_NAME) {
-        return true;
+  for (let index = 0; index < ADMINS.split(",").length; index++) {
+    if (ADMINS.split(",")[index] === ACTOR_NAME) {
+      return true;
     }
   }
   return false;
@@ -230,15 +233,14 @@ async function validatePR() {
     modifiedFolder.forEach(async function (folder) {
       let targetFile = `${folder}/README.md`;
 
-      // if independent template
-      if(folder[0] === "@") {
-        folder = res2.data[i].filename;
-        targetFile = res2.data[i].filename;
-      }
-
       // check if this file is present or not
       let isFilePresent = false;
       for (let i = 0; i < res2.data.length; i++) {
+        // if independent template
+        if (folder[0] === "@") {
+          folder = res2.data[i].filename;
+          targetFile = res2.data[i].filename;
+        }
         if (res2.data[i].filename === targetFile) {
           isFilePresent = true;
           // check if readme is valid or not
@@ -263,7 +265,7 @@ async function validatePR() {
     console.log("existing template is edited");
 
     // case where template is deleted
-    if (await deletingTemplate(res2.data, modifiedFolder) === true) {
+    if ((await deletingTemplate(res2.data, modifiedFolder)) === true) {
       console.log("template is now being deleted");
       if (!isAdmin()) {
         console.log("only admins can delete the template");
@@ -281,7 +283,7 @@ async function validatePR() {
         let targerFolder = `${folder}/README.md`;
         if (res2.data[i].filename === targerFolder) {
           // either readme is edited or removed
-          if(res2.data[i].status === "removed") {
+          if (res2.data[i].status === "removed") {
             msg += `:warning: An error occurred: The README.md file is missing in the existing template you are trying to modify.`;
             // Condn: after removing check if he is again adding that or not in same pr
             console.log("msg :: ", msg);
@@ -295,7 +297,7 @@ async function validatePR() {
               msg += `:warning: An error occurred: The README.md file in the existing template you are trying to modify has been edited and is now invalid. To ensure that a valid README.md file is present in the template, you can use our [README generator](${readmeLink}) to create one.`;
               console.log("msg :: ", msg);
               await commentOnPR(prNo, msg);
-            }  
+            }
           }
           break;
         }
