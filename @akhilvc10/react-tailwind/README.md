@@ -1,4 +1,4 @@
-# @akhilvc1/react-tailwind
+# @akhilvc10/react-tailwind
 
 Testing independent template feature.
 
