@@ -238,7 +238,8 @@ async function validatePR() {
       for (let i = 0; i < res2.data.length; i++) {
         // if independent template
         if (folder[0] === "@") {
-          folder = res2.data[i].filename;
+          let fName = res2.data[i].filename;
+          folder = fName.substring(fName.indexOf("@"), fName.lastIndexOf("/"));
           targetFile = res2.data[i].filename;
           console.log(folder, res2.data[i].raw_url);
         }
