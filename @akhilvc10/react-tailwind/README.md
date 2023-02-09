@@ -16,3 +16,4 @@ Testing independent template feature.
 ## Setup Guide
 This is a dummy setup guide for the independent template.
 
+
