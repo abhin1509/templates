@@ -151,7 +151,16 @@ async function updateFile() {
       }
 
       id++;
-      templates.push({ id, name, sha, description, tags, dependencies });
+
+      let maintainBy = "stackw3";
+      if (name[0] === "@") {
+        let userName = name.substring(
+          str.indexOf("@") + 1,
+          str.lastIndexOf("/")
+        );
+        maintainBy = userName;
+      }
+      templates.push({ id, name, maintainBy, sha, description, tags, dependencies });
     }
 
     // const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
@@ -180,31 +189,31 @@ async function updateFile() {
     //   console.log("templatesBase64:: ", templatesBase64);
     // } else {
     //   console.log("diff content so, do commit");
-      // const commitRes = await octokit.request(
-      //   "PUT /repos/{owner}/{repo}/contents/{path}",
-      //   {
-      //     owner: owner,
-      //     repo: "homepage",
-      //     path: "templates.json",
-      //     message: "update templates.json",
-      //     branch: branch,
-      //     sha: templatesSha,
-      //     committer: {
-      //       name: "stackw3",
-      //       email: "info@stackw3.app",
-      //     },
-      //     content: templatesBase64,
-      //     headers: { Authorization: `Bearer ${GH_TOKEN}` },
-      //   }
-      // );
-      // if (commitRes.status === 200) {
-        // console.log("commit successful");
-        console.log(templates);
-        // console.log(templatesBase64);
-        // console.log(commitRes.data);
-      // } else {
-        // console.log("commit UNSUCCESSFUL");
-      // }
+    // const commitRes = await octokit.request(
+    //   "PUT /repos/{owner}/{repo}/contents/{path}",
+    //   {
+    //     owner: owner,
+    //     repo: "homepage",
+    //     path: "templates.json",
+    //     message: "update templates.json",
+    //     branch: branch,
+    //     sha: templatesSha,
+    //     committer: {
+    //       name: "stackw3",
+    //       email: "info@stackw3.app",
+    //     },
+    //     content: templatesBase64,
+    //     headers: { Authorization: `Bearer ${GH_TOKEN}` },
+    //   }
+    // );
+    // if (commitRes.status === 200) {
+    // console.log("commit successful");
+    console.log(templates);
+    // console.log(templatesBase64);
+    // console.log(commitRes.data);
+    // } else {
+    // console.log("commit UNSUCCESSFUL");
+    // }
     // }
   } catch (error) {
     console.log(error);
