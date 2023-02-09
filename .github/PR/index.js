@@ -240,6 +240,7 @@ async function validatePR() {
         if (folder[0] === "@") {
           folder = res2.data[i].filename;
           targetFile = res2.data[i].filename;
+          console.log(folder, res2.data[i].raw_url);
         }
         if (res2.data[i].filename === targetFile) {
           isFilePresent = true;
