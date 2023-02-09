@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
 
-const owner = "stackw3";
+const owner = "abhin1509";
 const branch = "main";
 const octokit = new Octokit();
 
@@ -154,58 +154,58 @@ async function updateFile() {
       templates.push({ id, name, sha, description, tags, dependencies });
     }
 
-    const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
-    const res2 = await axios
-      .get(tempURL, {
-        responseType: "json",
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
+    // const res2 = await axios
+    //   .get(tempURL, {
+    //     responseType: "json",
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
 
-    let oldContentBase64 = Buffer.from(
-      JSON.stringify(res2.data, null, 4)
-    ).toString("base64");
-    const templatesBase64 = Buffer.from(
-      JSON.stringify(templates, null, 4)
-    ).toString("base64");
+    // let oldContentBase64 = Buffer.from(
+    //   JSON.stringify(res2.data, null, 4)
+    // ).toString("base64");
+    // const templatesBase64 = Buffer.from(
+    //   JSON.stringify(templates, null, 4)
+    // ).toString("base64");
 
-    let templatesSha = await getTemplatesSha();
+    // let templatesSha = await getTemplatesSha();
 
-    // check before commit that previous file should not be same as current
-    if (oldContentBase64 === templatesBase64) {
-      console.log("same content so, don't commit");
-      console.log("templates:: ", templates);
-      console.log("oldContentBase64:: ", oldContentBase64);
-      console.log("templatesBase64:: ", templatesBase64);
-    } else {
-      console.log("diff content so, do commit");
-      const commitRes = await octokit.request(
-        "PUT /repos/{owner}/{repo}/contents/{path}",
-        {
-          owner: owner,
-          repo: "homepage",
-          path: "templates.json",
-          message: "update templates.json",
-          branch: branch,
-          sha: templatesSha,
-          committer: {
-            name: "stackw3",
-            email: "info@stackw3.app",
-          },
-          content: templatesBase64,
-          headers: { Authorization: `Bearer ${GH_TOKEN}` },
-        }
-      );
-      if (commitRes.status === 200) {
-        console.log("commit successful");
+    // // check before commit that previous file should not be same as current
+    // if (oldContentBase64 === templatesBase64) {
+    //   console.log("same content so, don't commit");
+    //   console.log("templates:: ", templates);
+    //   console.log("oldContentBase64:: ", oldContentBase64);
+    //   console.log("templatesBase64:: ", templatesBase64);
+    // } else {
+    //   console.log("diff content so, do commit");
+      // const commitRes = await octokit.request(
+      //   "PUT /repos/{owner}/{repo}/contents/{path}",
+      //   {
+      //     owner: owner,
+      //     repo: "homepage",
+      //     path: "templates.json",
+      //     message: "update templates.json",
+      //     branch: branch,
+      //     sha: templatesSha,
+      //     committer: {
+      //       name: "stackw3",
+      //       email: "info@stackw3.app",
+      //     },
+      //     content: templatesBase64,
+      //     headers: { Authorization: `Bearer ${GH_TOKEN}` },
+      //   }
+      // );
+      // if (commitRes.status === 200) {
+        // console.log("commit successful");
         console.log(templates);
-        console.log(templatesBase64);
-        console.log(commitRes.data);
-      } else {
-        console.log("commit UNSUCCESSFUL");
-      }
-    }
+        // console.log(templatesBase64);
+        // console.log(commitRes.data);
+      // } else {
+        // console.log("commit UNSUCCESSFUL");
+      // }
+    // }
   } catch (error) {
     console.log(error);
   }
