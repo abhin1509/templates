@@ -156,7 +156,7 @@ async function updateFile() {
       if (name[0] === "@") {
         let userName = name.substring(
           str.indexOf("@") + 1,
-          str.lastIndexOf("/")
+          str.lastIndexOf("@")
         );
         maintainBy = userName;
       }
