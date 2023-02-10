@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
 
-const owner = "stackw3";
+const owner = "abhin1509";
 const branch = "main";
 const octokit = new Octokit();
 
@@ -154,6 +154,35 @@ async function updateFile() {
       templates.push({ id, name, sha, description, tags, dependencies });
     }
 
+    const indTemplatesURL = `https://raw.githubusercontent.com/${owner}/templates/${branch}/IndependentTemplates.json`;
+    const indTempRes = await axios
+      .get(indTemplatesURL, {
+        responseType: "json",
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    for (temp of indTempRes.data) {
+      let { name, description, tags, dependencies } = temp;
+      let maintainBy = name.substring(
+        name.indexOf("@") + 1,
+        name.lastIndexOf("/")
+      );
+      let sha = "00000";
+      id++;
+      templates.push({
+        id,
+        name,
+        maintainBy,
+        sha,
+        description,
+        tags,
+        dependencies,
+      });
+    }
+    console.log(templates);
+
     const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
     const res2 = await axios
       .get(tempURL, {
@@ -180,31 +209,31 @@ async function updateFile() {
       console.log("templatesBase64:: ", templatesBase64);
     } else {
       console.log("diff content so, do commit");
-      const commitRes = await octokit.request(
-        "PUT /repos/{owner}/{repo}/contents/{path}",
-        {
-          owner: owner,
-          repo: "homepage",
-          path: "templates.json",
-          message: "update templates.json",
-          branch: branch,
-          sha: templatesSha,
-          committer: {
-            name: "stackw3",
-            email: "info@stackw3.app",
-          },
-          content: templatesBase64,
-          headers: { Authorization: `Bearer ${GH_TOKEN}` },
-        }
-      );
-      if (commitRes.status === 200) {
-        console.log("commit successful");
+      // const commitRes = await octokit.request(
+      //   "PUT /repos/{owner}/{repo}/contents/{path}",
+      //   {
+      //     owner: owner,
+      //     repo: "homepage",
+      //     path: "templates.json",
+      //     message: "update templates.json",
+      //     branch: branch,
+      //     sha: templatesSha,
+      //     committer: {
+      //       name: "stackw3",
+      //       email: "info@stackw3.app",
+      //     },
+      //     content: templatesBase64,
+      //     headers: { Authorization: `Bearer ${GH_TOKEN}` },
+      //   }
+      // );
+      // if (commitRes.status === 200) {
+        // console.log("commit successful");
         console.log(templates);
         console.log(templatesBase64);
-        console.log(commitRes.data);
-      } else {
-        console.log("commit UNSUCCESSFUL");
-      }
+        // console.log(commitRes.data);
+      // } else {
+        // console.log("commit UNSUCCESSFUL");
+      // }
     }
   } catch (error) {
     console.log(error);
