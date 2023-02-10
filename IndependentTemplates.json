@@ -13,7 +13,7 @@
   },
   {
     "name": "@akhilvc10/random-template",
-    "description": "A Quick vite random  template starter project template.",
+    "description": "A Quick vite random  template  starter project template.",
     "tags": ["vite", "vanilla"],
     "dependencies": [
       "react",
