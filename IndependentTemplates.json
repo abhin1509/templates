@@ -10,5 +10,17 @@
       "@vanilla-extract/vite-plugin",
       "@vanilla-extract/recipes"
     ]
+  },
+  {
+    "name": "@akhilvc10/random-template",
+    "description": "A Quick vite random template starter project template.",
+    "tags": ["vite", "vanilla"],
+    "dependencies": [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "@vanilla-extract/vite-plugin",
+      "@vanilla-extract/recipes"
+    ]
   }
 ]
