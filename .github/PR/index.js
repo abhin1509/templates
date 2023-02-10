@@ -269,6 +269,8 @@ async function validatePR() {
   } else {
     console.log("existing template is edited");
 
+    
+
     // case where template is deleted
     if ((await deletingTemplate(res2.data, modifiedFolder)) === true) {
       console.log("template is now being deleted");
@@ -286,14 +288,6 @@ async function validatePR() {
     modifiedFolder.forEach(async function (folder) {
       for (let i = 0; i < res2.data.length; i++) {
         let targerFolder = `${folder}/README.md`;
-        // if independent template is edited
-        if (folder[0] === "@") {
-          isIndep = true;
-          let fName = res2.data[i].filename;
-          folder = fName.substring(fName.indexOf("@"), fName.lastIndexOf("/"));
-          targetFile = res2.data[i].filename;
-          console.log(folder, res2.data[i].raw_url);
-        }
         if (res2.data[i].filename === targerFolder) {
           // either readme is edited or removed
           if (res2.data[i].status === "removed") {
@@ -312,9 +306,7 @@ async function validatePR() {
               await commentOnPR(prNo, msg);
             }
           }
-          if (isIndep === false) {
-            break;
-          }
+          break;
         }
       }
     });
