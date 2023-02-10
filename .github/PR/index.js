@@ -222,7 +222,7 @@ async function validatePR() {
 
   let condn = isNewTemplate(modifiedFolder, existingFolders);
   let msg = "";
-
+  let isIndep = false;
   if (condn === -1) {
     msg += `:warning: An error occurred: It is not possible to add a new template and modify an existing one in the same pull request. Please submit two separate pull requests.`;
     console.log("msg is:: ", msg);
@@ -238,6 +238,7 @@ async function validatePR() {
       for (let i = 0; i < res2.data.length; i++) {
         // if independent template
         if (folder[0] === "@") {
+          isIndep = true;
           let fName = res2.data[i].filename;
           folder = fName.substring(fName.indexOf("@"), fName.lastIndexOf("/"));
           targetFile = res2.data[i].filename;
@@ -252,7 +253,9 @@ async function validatePR() {
             console.log("msg is:: ", msg);
             await commentOnPR(prNo, msg);
           }
-          break;
+          if(isIndep === false) {
+            break;
+          }
         }
       }
 
