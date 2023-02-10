@@ -153,13 +153,6 @@ async function updateFile() {
       id++;
 
       let maintainBy = "stackw3";
-      if (name[0] === "@") {
-        let userName = name.substring(
-          name.indexOf("@") + 1,
-          name.lastIndexOf("@")
-        );
-        maintainBy = userName;
-      }
       templates.push({
         id,
         name,
@@ -180,11 +173,25 @@ async function updateFile() {
         console.error(error);
       });
 
-    console.log(indTempRes.data);
-    console.log("hello");
     for (temp of indTempRes.data) {
-      console.log(temp);
+      let { name, description, tags, dependencies } = temp;
+      let maintainBy = name.substring(
+        name.indexOf("@") + 1,
+        name.lastIndexOf("/")
+      );
+      let sha = "00000";
+      id++;
+      templates.push({
+        id,
+        name,
+        maintainBy,
+        sha,
+        description,
+        tags,
+        dependencies,
+      });
     }
+    console.log(templates);
 
     // const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
     // const res2 = await axios
