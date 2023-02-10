@@ -160,7 +160,30 @@ async function updateFile() {
         );
         maintainBy = userName;
       }
-      templates.push({ id, name, maintainBy, sha, description, tags, dependencies });
+      templates.push({
+        id,
+        name,
+        maintainBy,
+        sha,
+        description,
+        tags,
+        dependencies,
+      });
+    }
+
+    const indTemplatesURL = `https://raw.githubusercontent.com/${owner}/templates/${branch}/IndependentTemplates.json`;
+    const indTempRes = await axios
+      .get(indTemplatesURL, {
+        responseType: "json",
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    console.log(indTempRes.data);
+    console.log("hello");
+    for (temp of indTempRes.data) {
+      console.log(temp);
     }
 
     // const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
