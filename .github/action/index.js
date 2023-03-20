@@ -72,7 +72,7 @@ const getTemplatesSha = async () => {
       owner: owner,
       repo: "homepage",
       tree_sha: branch,
-      headers: { Authorization: `Bearer ${GH_TOKEN}` },
+      // headers: { Authorization: `Bearer ${GH_TOKEN}` },
     }
   );
   const { tree } = data;
