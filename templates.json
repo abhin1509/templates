@@ -2,7 +2,6 @@
     {
         "id": 1,
         "name": "astro-strapi",
-        "maintainBy": "stackw3",
         "sha": "4038dd9cd43df3a106f5c3400e0043a4c7e3aee8",
         "description": "A Quick astro base and strapi backend starter project template.",
         "tags": [
@@ -20,7 +19,6 @@
     {
         "id": 2,
         "name": "next-hover-base",
-        "maintainBy": "stackw3",
         "sha": "310bd95068b22fd2974d55e7dda6810a3da138f8",
         "description": "🚀 A Next.js quick start project template powered by hover.style",
         "tags": [
@@ -39,7 +37,6 @@
     {
         "id": 3,
         "name": "next-react-query",
-        "maintainBy": "stackw3",
         "sha": "a2263ad4631cb3b819bf9c21a503dd306f9cd1b9",
         "description": "🚀 A Next.js quick start project template with React Query implementation",
         "tags": [
@@ -58,7 +55,6 @@
     {
         "id": 4,
         "name": "react-base-router-configs",
-        "maintainBy": "stackw3",
         "sha": "f5f1c3763234fff9e70b12c78510cf6a2520fbdd",
         "description": "Starter Base-React project that includes react-router-dom v6 powered by vite.",
         "tags": [
@@ -91,7 +87,6 @@
     {
         "id": 5,
         "name": "react-base-testing-library-apollo",
-        "maintainBy": "stackw3",
         "sha": "d308fd54aa051b0b3c4e5ef26d2c4048f8f2f295",
         "description": "A Quick react starter project template powered by vite with React Testing Library. A testing utility tool that's built to test the actual DOM tree rendered by React on the browser.",
         "tags": [
@@ -124,7 +119,6 @@
     {
         "id": 6,
         "name": "react-base-testing-library-react-query",
-        "maintainBy": "stackw3",
         "sha": "8f26d65ca4fcd894cd071d39984d96f45f912a87",
         "description": "A Quick react starter project template powered by vite with React Testing Library and React Query, The missing data-fetching library for React, but in more technical terms, it makes fetching, caching, synchronizing and updating server state in your React applications a breeze",
         "tags": [
@@ -163,7 +157,6 @@
     {
         "id": 7,
         "name": "react-base-testing-library",
-        "maintainBy": "stackw3",
         "sha": "f91385795b64aa17888d2c0f485fa57a5dffdbb2",
         "description": "A Quick react starter project template powered by vite with React Testing Library. A testing utility tool that's built to test the actual DOM tree rendered by React on the browser.",
         "tags": [
@@ -196,7 +189,6 @@
     {
         "id": 8,
         "name": "react-base",
-        "maintainBy": "stackw3",
         "sha": "a679c11e90cccbb1fbc89d34b71b2320dc20a54e",
         "description": "🚀 A React quick start project template powered by vite.",
         "tags": [
@@ -230,7 +222,6 @@
     {
         "id": 9,
         "name": "react-native-typescript",
-        "maintainBy": "stackw3",
         "sha": "951171d16aa4ac29cca1ad4e13b9ec1639eb045e",
         "description": "🚀 A React-Native quick start project with typescript template.",
         "tags": [
@@ -259,7 +250,7 @@
         "id": 10,
         "name": "@akhilvc10/vite-vanilla-extract",
         "maintainBy": "akhilvc10",
-        "sha": "main",
+        "sha": "00000",
         "description": "A Quick vite vanilla extract starter project template.",
         "tags": [
             "vite",
