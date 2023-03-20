@@ -183,7 +183,7 @@ async function updateFile() {
     }
     console.log(templates);
 
-    const tempURL = `https://raw.githubusercontent.com/${owner}/homepage/${branch}/templates.json`;
+    const tempURL = `https://raw.githubusercontent.com/abhin1509/templates/main/templates.json`;
     const res2 = await axios
       .get(tempURL, {
         responseType: "json",
@@ -209,31 +209,31 @@ async function updateFile() {
       console.log("templatesBase64:: ", templatesBase64);
     } else {
       console.log("diff content so, do commit");
-      // const commitRes = await octokit.request(
-      //   "PUT /repos/{owner}/{repo}/contents/{path}",
-      //   {
-      //     owner: owner,
-      //     repo: "homepage",
-      //     path: "templates.json",
-      //     message: "update templates.json",
-      //     branch: branch,
-      //     sha: templatesSha,
-      //     committer: {
-      //       name: "stackw3",
-      //       email: "info@stackw3.app",
-      //     },
-      //     content: templatesBase64,
-      //     headers: { Authorization: `Bearer ${GH_TOKEN}` },
-      //   }
-      // );
-      // if (commitRes.status === 200) {
-        // console.log("commit successful");
+      const commitRes = await octokit.request(
+        "PUT /repos/{owner}/{repo}/contents/{path}",
+        {
+          owner: owner,
+          repo: "templates",
+          path: "templates.json",
+          message: "update templates.json",
+          branch: branch,
+          sha: templatesSha,
+          committer: {
+            name: "stackw3",
+            email: "info@stackw3.app",
+          },
+          content: templatesBase64,
+          headers: { Authorization: `Bearer ${THIS_TOKEN}` },
+        }
+      );
+      if (commitRes.status === 200) {
+        console.log("commit successful");
         console.log(templates);
         console.log(templatesBase64);
-        // console.log(commitRes.data);
-      // } else {
-        // console.log("commit UNSUCCESSFUL");
-      // }
+        console.log(commitRes.data);
+      } else {
+        console.log("commit UNSUCCESSFUL");
+      }
     }
   } catch (error) {
     console.log(error);
