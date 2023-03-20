@@ -70,9 +70,9 @@ const getTemplatesSha = async () => {
     "GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
     {
       owner: owner,
-      repo: "homepage",
+      repo: "templates",
       tree_sha: branch,
-      // headers: { Authorization: `Bearer ${GH_TOKEN}` },
+      headers: { Authorization: `Bearer ${THIS_TOKEN}` },
     }
   );
   const { tree } = data;
@@ -199,7 +199,7 @@ async function updateFile() {
       JSON.stringify(templates, null, 4)
     ).toString("base64");
 
-    // let templatesSha = await getTemplatesSha();
+    let templatesSha = await getTemplatesSha();
 
     // check before commit that previous file should not be same as current
     if (oldContentBase64 === templatesBase64) {
@@ -217,7 +217,7 @@ async function updateFile() {
           path: "templates.json",
           message: "update templates.json",
           branch: branch,
-          // sha: templatesSha,
+          sha: templatesSha,
           committer: {
             name: "stackw3",
             email: "info@stackw3.app",
