@@ -192,7 +192,7 @@ async function updateFile() {
       .catch((error) => {
         console.error(error);
       });
-    console.log("res2.Items:: ", res2.Items);
+    // console.log("res2.Items:: ", res2.Items);
 
     let dbTemplates = new Set();
     for (temp of res2.Items) {
