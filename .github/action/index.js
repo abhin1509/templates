@@ -269,7 +269,7 @@ async function updateFile() {
     // now currentTemplates contains all the templates which are not in dbTemplates
     // so we need to add all the templates in currentTemplates to createTemp array
     let createTemp = [];
-    currentTemplates.forEach((name) => {
+    currentTemplates.forEach(async (name) => {
       // generate a unique id for the template
       let id = crypto.randomBytes(16).toString('base64');
       // TODO: push to db
