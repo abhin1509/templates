@@ -260,7 +260,7 @@ async function updateFile() {
     let deleteTempId = [];
     dbTemplates.forEach(async (name) => {
       // find the id
-      let id = res2.data.find((temp) => temp.name === name).id;
+      let id = res2.Items.find((temp) => temp.name === name).id;
       await dynamoDB
         .delete({
           TableName: tableName,
