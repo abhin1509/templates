@@ -242,6 +242,8 @@ async function updateFile() {
         dbTemp.tags.toString() !== currTemp.tags.toString() ||
         dbTemp.dependencies.toString() !== currTemp.dependencies.toString()
       ) {
+        console.log("db:: ", dbTemp);
+        console.log("curr:: ", currTemp);
         // push dbTemp.id to updateTempId array
         updateTempId.push(dbTemp.id);
       }
