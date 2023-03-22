@@ -250,6 +250,7 @@ async function updateFile() {
     }
 
     console.log("updateTemplateId:: ", updateTempId);
+    
     /*
 
     // delete common templates from both cuurentTemplates and dbTemplates
