@@ -1,5 +1,9 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
+const AWS = require('aws-sdk');
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+const tableName = "testTable";
 
 const owner = "abhin1509";
 const branch = "main";
@@ -65,30 +69,9 @@ const getTags = (arr, start) => {
   return ans;
 };
 
-const getTemplatesSha = async () => {
-  const { data } = await octokit.request(
-    "GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
-    {
-      owner: owner,
-      repo: "templates",
-      tree_sha: branch,
-      headers: { Authorization: `Bearer ${THIS_TOKEN}` },
-    }
-  );
-  const { tree } = data;
-
-  let templatesSha = "";
-  for (let it of tree) {
-    if (it.path === "templates.json") {
-      templatesSha += it.sha;
-      break;
-    }
-  }
-  return templatesSha;
-};
-
 async function updateFile() {
   try {
+    // fetch latest template details
     const { data } = await octokit.request(
       "GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
       {
@@ -151,9 +134,19 @@ async function updateFile() {
       }
 
       id++;
-      templates.push({ id, name, sha, description, tags, dependencies });
+      let maintainBy = "stackw3";
+      templates.push({
+        id,
+        name,
+        maintainBy,
+        sha,
+        description,
+        tags,
+        dependencies,
+      });
     }
 
+    // update from independentTemplates.json
     const indTemplatesURL = `https://raw.githubusercontent.com/${owner}/templates/${branch}/IndependentTemplates.json`;
     const indTempRes = await axios
       .get(indTemplatesURL, {
@@ -164,12 +157,12 @@ async function updateFile() {
       });
 
     for (temp of indTempRes.data) {
-      let { name, description, tags, dependencies } = temp;
+      let { name, defaultBranch, description, tags, dependencies } = temp;
       let maintainBy = name.substring(
         name.indexOf("@") + 1,
         name.lastIndexOf("/")
       );
-      let sha = "00000";
+      let sha = defaultBranch;
       id++;
       templates.push({
         id,
@@ -181,60 +174,101 @@ async function updateFile() {
         dependencies,
       });
     }
-    console.log(templates);
 
-    const tempURL = `https://raw.githubusercontent.com/abhin1509/templates/main/templates.json`;
-    const res2 = await axios
-      .get(tempURL, {
-        responseType: "json",
+    let currentTemplates = new Set();
+    for (temp of templates) {
+      currentTemplates.add(temp.name);
+    }
+
+    console.log("currentTemplates:: ", currentTemplates);
+
+    /* ***************************** */
+    /* all current templates details */
+    /* ***************************** */
+
+    const res2 = await dynamoDB
+      .scan({
+        TableName: tableName,
       })
+      .promise()
       .catch((error) => {
         console.error(error);
       });
+    console.log("res2.Items:: ", res2.Items);
 
-    let oldContentBase64 = Buffer.from(
-      JSON.stringify(res2.data, null, 4)
-    ).toString("base64");
-    const templatesBase64 = Buffer.from(
-      JSON.stringify(templates, null, 4)
-    ).toString("base64");
+    let dbTemplates = new Set();
+    for (temp of res2.Items) {
+      dbTemplates.add(temp.name);
+    }
 
-    let templatesSha = await getTemplatesSha();
+    console.log("dbTemplates:: ", dbTemplates);
 
-    // check before commit that previous file should not be same as current
-    if (oldContentBase64 === templatesBase64) {
-      console.log("same content so, don't commit");
-      console.log("templates:: ", templates);
-      console.log("oldContentBase64:: ", oldContentBase64);
-      console.log("templatesBase64:: ", templatesBase64);
-    } else {
-      console.log("diff content so, do commit");
-      const commitRes = await octokit.request(
-        "PUT /repos/{owner}/{repo}/contents/{path}",
-        {
-          owner: owner,
-          repo: "templates",
-          path: "templates.json",
-          message: "update templates.json",
-          branch: branch,
-          sha: templatesSha,
-          committer: {
-            name: "stackw3",
-            email: "info@stackw3.app",
-          },
-          content: templatesBase64,
-          headers: { Authorization: `Bearer ${THIS_TOKEN}` },
+    /* ***************************** */
+    /* old db templates details */
+    /* ***************************** */
+/*
+    // find common templates from both currentTemplates and dbTemplates
+    let commonTemplates = new Set(
+      [...currentTemplates].filter((x) => dbTemplates.has(x))
+    );
+
+    // loop through the commonTemplates and check if any of the details are changed or not
+    // if changed then update the details in updateTemp array
+    // else do nothing
+    let updateTempId = [];
+    for (let name of commonTemplates) {
+      let dbTemp;
+      for (let temp of res2.data) {
+        if (temp.name === name) {
+          dbTemp = temp;
+          break;
         }
-      );
-      if (commitRes.status === 200) {
-        console.log("commit successful");
-        console.log(templates);
-        console.log(templatesBase64);
-        console.log(commitRes.data);
-      } else {
-        console.log("commit UNSUCCESSFUL");
+      }
+      let currTemp;
+      for (let temp of templates) {
+        if (temp.name === name) {
+          currTemp = temp;
+          break;
+        }
+      }
+
+      if (
+        dbTemp.maintainBy !== currTemp.maintainBy ||
+        dbTemp.description !== currTemp.description ||
+        dbTemp.tags.toString() !== currTemp.tags.toString() ||
+        dbTemp.dependencies.toString() !== currTemp.dependencies.toString()
+      ) {
+        // push dbTemp.id to updateTempId array
+        updateTempId.push(dbTemp.id);
       }
     }
+
+    // delete common templates from both cuurentTemplates and dbTemplates
+    for (temp of commonTemplates) {
+      currentTemplates.delete(temp);
+      dbTemplates.delete(temp);
+    }
+
+    // dbTemplates contains all the templates which are not in currentTemplates
+    // and we need to add all the templates in dbTemplates to deleteTemp array
+    let deleteTempId = [];
+    dbTemplates.forEach((name) => {
+      // find the id
+      let nameId = res2.data.find((temp) => temp.name === name).id;
+      deleteTempId.push(nameId);
+    });
+
+    // now currentTemplates contains all the templates which are not in dbTemplates
+    // so we need to add all the templates in currentTemplates to createTemp array
+    let createTemp = [];
+    currentTemplates.forEach((name) => {
+      // generate a unique id for the template
+      // TODO: push to db
+      createTemp.push(temp);
+    });
+
+    //TODO: update wala db mein push kro
+    //TODO: delete wala db mein push kro*/
   } catch (error) {
     console.log(error);
   }
