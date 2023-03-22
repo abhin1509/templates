@@ -1,9 +1,9 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
 const crypto = require("crypto");
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 AWS.config.update({
-  region: 'us-east-1' // Replace with your desired region
+  region: "us-east-1", // Replace with your desired region
 });
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = "testTable";
@@ -258,12 +258,17 @@ async function updateFile() {
     // dbTemplates contains all the templates which are not in currentTemplates
     // and we need to add all the templates in dbTemplates to deleteTemp array
     let deleteTempId = [];
-    dbTemplates.forEach((name) => {
+    dbTemplates.forEach(async (name) => {
       // find the id
-      let nameId = res2.Items.find((temp) => temp.name === name).id;
-      deleteTempId.push(nameId);
+      let id = res2.data.find((temp) => temp.name === name).id;
+      await dynamoDB
+        .delete({
+          TableName: tableName,
+          Key: { id },
+        })
+        .promise();
+      deleteTempId.push(id);
     });
-
     console.log("deleteTempId:: ", deleteTempId);
 
     // now currentTemplates contains all the templates which are not in dbTemplates
@@ -271,7 +276,7 @@ async function updateFile() {
     let createTemp = [];
     currentTemplates.forEach(async (name) => {
       // generate a unique id for the template
-      let id = crypto.randomBytes(16).toString('base64');
+      let id = crypto.randomBytes(16).toString("hex");
       // TODO: push to db
       let currentTemp;
       for (let temp of templates) {
@@ -281,18 +286,20 @@ async function updateFile() {
         }
       }
       createTemp.push(currentTemp);
-      await dynamoDB.put({
-        Item: { 
-          id,
-          "maintainBy": currentTemp.maintainBy,
-          "description": currentTemp.description,
-          "name": currentTemp.name,
-          "sha": currentTemp.sha,
-          "tags": currentTemp.tags,
-          "dependencies": currentTemp.dependencies
-        },
-        TableName: tableName,
-      }).promise();
+      await dynamoDB
+        .put({
+          Item: {
+            id,
+            maintainBy: currentTemp.maintainBy,
+            description: currentTemp.description,
+            name: currentTemp.name,
+            sha: currentTemp.sha,
+            tags: currentTemp.tags,
+            dependencies: currentTemp.dependencies,
+          },
+          TableName: tableName,
+        })
+        .promise();
     });
 
     console.log("createTemp:: ", createTemp);
