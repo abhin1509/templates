@@ -296,7 +296,7 @@ async function updateFile() {
             S: currentTemp.sha
           }
         },
-        TableName: "todoTable",
+        TableName: tableName,
       }).promise();
       createTemp.push(currentTemp);
     });
