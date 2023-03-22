@@ -248,17 +248,16 @@ async function updateFile() {
         updateTempId.push(dbTemp.id);
       }
     }
-
     console.log("updateTemplateId:: ", updateTempId);
-
-    
-    /*
 
     // delete common templates from both cuurentTemplates and dbTemplates
     for (temp of commonTemplates) {
       currentTemplates.delete(temp);
       dbTemplates.delete(temp);
     }
+
+    console.log("currentTemplates:: ", currentTemplates);
+    console.log("dbTemplates:: ", dbTemplates);
 
     // dbTemplates contains all the templates which are not in currentTemplates
     // and we need to add all the templates in dbTemplates to deleteTemp array
@@ -269,6 +268,10 @@ async function updateFile() {
       deleteTempId.push(nameId);
     });
 
+    console.log("deleteTempId:: ", deleteTempId);
+
+
+    /*
     // now currentTemplates contains all the templates which are not in dbTemplates
     // so we need to add all the templates in currentTemplates to createTemp array
     let createTemp = [];
