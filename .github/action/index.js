@@ -284,15 +284,9 @@ async function updateFile() {
         Item: { 
           id,
           "maintainBy": currentTemp.maintainBy,
-          "description": {
-            S: currentTemp.description
-          },
-          "name": {
-            S: currentTemp.name
-          },
-          "sha": {
-            S: currentTemp.sha
-          }
+          "description": currentTemp.description,
+          "name": currentTemp.name,
+          "sha": currentTemp.sha
         },
         TableName: tableName,
       }).promise();
