@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
+const crypto = require("crypto");
 const AWS = require('aws-sdk');
 AWS.config.update({
   region: 'us-east-1' // Replace with your desired region
@@ -91,7 +92,6 @@ async function updateFile() {
     );
 
     let templates = [];
-    let id = 0;
     for (let item of trees) {
       let { path, sha } = item;
       let name, description, tags, dependencies;
@@ -135,10 +135,8 @@ async function updateFile() {
         }
       }
 
-      id++;
       let maintainBy = "stackw3";
       templates.push({
-        id,
         name,
         maintainBy,
         sha,
@@ -165,9 +163,7 @@ async function updateFile() {
         name.lastIndexOf("/")
       );
       let sha = defaultBranch;
-      id++;
       templates.push({
-        id,
         name,
         maintainBy,
         sha,
@@ -242,8 +238,8 @@ async function updateFile() {
         dbTemp.tags.toString() !== currTemp.tags.toString() ||
         dbTemp.dependencies.toString() !== currTemp.dependencies.toString()
       ) {
-        console.log("db:: ", dbTemp);
-        console.log("curr:: ", currTemp);
+        // console.log("db:: ", dbTemp);
+        // console.log("curr:: ", currTemp);
         // push dbTemp.id to updateTempId array
         updateTempId.push(dbTemp.id);
       }
@@ -270,19 +266,45 @@ async function updateFile() {
 
     console.log("deleteTempId:: ", deleteTempId);
 
-
-    /*
     // now currentTemplates contains all the templates which are not in dbTemplates
     // so we need to add all the templates in currentTemplates to createTemp array
     let createTemp = [];
     currentTemplates.forEach((name) => {
       // generate a unique id for the template
+      let id = crypto.randomBytes(16).toString('base64');
       // TODO: push to db
-      createTemp.push(temp);
+      let currentTemp;
+      for (let temp of templates) {
+        if (temp.name === name) {
+          currentTemp = temp;
+          break;
+        }
+      }
+      await dynamoDB.put({
+        Item: { 
+          id,
+          "maintainBy": {
+            S: currentTemp.maintainBy
+          },
+          "description": {
+            S: currentTemp.description
+          },
+          "name": {
+            S: currentTemp.name
+          },
+          "sha": {
+            S: currentTemp.sha
+          }
+        },
+        TableName: "todoTable",
+      }).promise();
+      createTemp.push(currentTemp);
     });
 
+    console.log("createTemp:: ", createTemp);
+
     //TODO: update wala db mein push kro
-    //TODO: delete wala db mein push kro*/
+    //TODO: delete wala db mein push kro
   } catch (error) {
     console.log(error);
   }
