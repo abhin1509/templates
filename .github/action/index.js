@@ -287,12 +287,8 @@ async function updateFile() {
           "description": currentTemp.description,
           "name": currentTemp.name,
           "sha": currentTemp.sha,
-          "tags": {
-            L: currentTemp.tags
-          },
-          "dependencies": {
-            L: currentTemp.dependencies
-          }
+          "tags": currentTemp.tags,
+          "dependencies": currentTemp.dependencies
         },
         TableName: tableName,
       }).promise();
