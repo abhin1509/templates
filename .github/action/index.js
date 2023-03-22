@@ -222,7 +222,7 @@ async function updateFile() {
     let updateTempId = [];
     for (let name of commonTemplates) {
       let dbTemp;
-      for (let temp of res2.data) {
+      for (let temp of res2.Items) {
         if (temp.name === name) {
           dbTemp = temp;
           break;
@@ -261,7 +261,7 @@ async function updateFile() {
     let deleteTempId = [];
     dbTemplates.forEach((name) => {
       // find the id
-      let nameId = res2.data.find((temp) => temp.name === name).id;
+      let nameId = res2.Items.find((temp) => temp.name === name).id;
       deleteTempId.push(nameId);
     });
 
