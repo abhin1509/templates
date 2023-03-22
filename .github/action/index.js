@@ -261,13 +261,13 @@ async function updateFile() {
     dbTemplates.forEach(async (name) => {
       // find the id
       let id = res2.Items.find((temp) => temp.name === name).id;
+      deleteTempId.push(id);
       await dynamoDB
         .delete({
           TableName: tableName,
           Key: { id },
         })
         .promise();
-      deleteTempId.push(id);
     });
     console.log("deleteTempId:: ", deleteTempId);
 
