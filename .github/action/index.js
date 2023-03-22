@@ -1,8 +1,10 @@
 const axios = require("axios");
 const { Octokit } = require("@octokit/rest");
 const AWS = require('aws-sdk');
+AWS.config.update({
+  region: 'us-east-1' // Replace with your desired region
+});
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-
 const tableName = "testTable";
 
 const owner = "abhin1509";
