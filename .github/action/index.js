@@ -254,7 +254,7 @@ async function updateFile() {
         await dynamoDB
           .update({
             TableName: tableName,
-            Key: { id },
+            Key: { id: dbTemp.id },
             UpdateExpression: "set maintainBy = :m, description = :d, tags = :t, dependencies = :dep, sha = :s",
             ExpressionAttributeValues: {
                 ":m": currTemp.maintainBy,
