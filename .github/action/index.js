@@ -208,11 +208,15 @@ async function updateFile() {
     /* ***************************** */
     /* old db templates details */
     /* ***************************** */
-/*
+
     // find common templates from both currentTemplates and dbTemplates
     let commonTemplates = new Set(
       [...currentTemplates].filter((x) => dbTemplates.has(x))
     );
+
+    console.log("commonTemplates:: ", commonTemplates);
+
+    /*
 
     // loop through the commonTemplates and check if any of the details are changed or not
     // if changed then update the details in updateTemp array
