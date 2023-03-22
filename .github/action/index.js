@@ -283,9 +283,7 @@ async function updateFile() {
       await dynamoDB.put({
         Item: { 
           id,
-          "maintainBy": {
-            S: currentTemp.maintainBy
-          },
+          "maintainBy": currentTemp.maintainBy,
           "description": {
             S: currentTemp.description
           },
