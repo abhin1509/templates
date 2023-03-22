@@ -216,8 +216,6 @@ async function updateFile() {
 
     console.log("commonTemplates:: ", commonTemplates);
 
-    /*
-
     // loop through the commonTemplates and check if any of the details are changed or not
     // if changed then update the details in updateTemp array
     // else do nothing
@@ -248,6 +246,9 @@ async function updateFile() {
         updateTempId.push(dbTemp.id);
       }
     }
+
+    console.log("updateTemplateId:: ", updateTempId);
+    /*
 
     // delete common templates from both cuurentTemplates and dbTemplates
     for (temp of commonTemplates) {
