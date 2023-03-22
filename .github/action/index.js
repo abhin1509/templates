@@ -280,6 +280,7 @@ async function updateFile() {
           break;
         }
       }
+      createTemp.push(currentTemp);
       await dynamoDB.put({
         Item: { 
           id,
@@ -292,7 +293,6 @@ async function updateFile() {
         },
         TableName: tableName,
       }).promise();
-      createTemp.push(currentTemp);
     });
 
     console.log("createTemp:: ", createTemp);
