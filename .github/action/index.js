@@ -147,7 +147,7 @@ async function updateFile() {
     }
 
     // update from independentTemplates.json
-    const indTemplatesURL = `https://raw.githubusercontent.com/${owner}/templates/${branch}/IndependentTemplates.json`;
+    const indTemplatesURL = `https://raw.githubusercontent.com/stackw3/templates/${branch}/IndependentTemplates.json`;
     const indTempRes = await axios
       .get(indTemplatesURL, {
         responseType: "json",
@@ -318,7 +318,7 @@ async function updateFile() {
     });
 
     console.log("createTemp:: ", createTemp);
-    
+
   } catch (error) {
     console.log(error);
   }
