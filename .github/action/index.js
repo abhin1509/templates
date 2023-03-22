@@ -212,8 +212,17 @@ async function updateFile() {
 
     console.log("commonTemplates:: ", commonTemplates);
 
+    // delete common templates from both cuurentTemplates and dbTemplates
+    for (temp of commonTemplates) {
+      currentTemplates.delete(temp);
+      dbTemplates.delete(temp);
+    }
+
+    console.log("currentTemplates:: ", currentTemplates);
+    console.log("dbTemplates:: ", dbTemplates);
+
     // loop through the commonTemplates and check if any of the details are changed or not
-    // if changed then update the details in updateTemp array
+    // if changed then update the details in updateTempId array
     // else do nothing
     let updateTempId = [];
     for (let name of commonTemplates) {
@@ -234,26 +243,32 @@ async function updateFile() {
 
       if (
         dbTemp.maintainBy !== currTemp.maintainBy ||
+        dbTemp.sha !== currTemp.sha ||
         dbTemp.description !== currTemp.description ||
         dbTemp.tags.toString() !== currTemp.tags.toString() ||
         dbTemp.dependencies.toString() !== currTemp.dependencies.toString()
       ) {
-        // console.log("db:: ", dbTemp);
-        // console.log("curr:: ", currTemp);
         // push dbTemp.id to updateTempId array
         updateTempId.push(dbTemp.id);
+        //TODO: update wala db mein push kro
+        await dynamoDB
+          .update({
+            TableName: tableName,
+            Key: { id },
+            UpdateExpression: "set maintainBy = :m, description = :d, tags = :t, dependencies = :dep, sha = :s",
+            ExpressionAttributeValues: {
+                ":m": currTemp.maintainBy,
+                ":d": currTemp.description,
+                ":t": currTemp.tags,
+                ":dep": currTemp.dependencies,
+                ":s": currTemp.sha
+            },
+            ReturnValues: "UPDATED_NEW",
+          })
+          .promise();
       }
     }
     console.log("updateTemplateId:: ", updateTempId);
-
-    // delete common templates from both cuurentTemplates and dbTemplates
-    for (temp of commonTemplates) {
-      currentTemplates.delete(temp);
-      dbTemplates.delete(temp);
-    }
-
-    console.log("currentTemplates:: ", currentTemplates);
-    console.log("dbTemplates:: ", dbTemplates);
 
     // dbTemplates contains all the templates which are not in currentTemplates
     // and we need to add all the templates in dbTemplates to deleteTemp array
@@ -303,10 +318,6 @@ async function updateFile() {
     });
 
     console.log("createTemp:: ", createTemp);
-
-    //TODO: update wala db mein push kro
-    
-    //TODO: delete wala db mein push kro
   } catch (error) {
     console.log(error);
   }
